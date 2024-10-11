@@ -19,7 +19,8 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 8080; // assign a port
- 
+// Enable pretty print for JSON responses
+app.set('json spaces', 2); 
 // Route: GET "/"
 /*app.get('/', (req, res) => {
     res.send('Assignment 2: Aaron Kerubin Racelis - 120388236');
