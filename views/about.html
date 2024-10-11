@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+    <link rel="stylesheet" href="/css/main.css"> <!-- Compiled Tailwind CSS -->
+</head>
+
+<body>
+    <div class="navbar bg-base-100">
+        <div class="flex-1">
+            <a class="btn btn-ghost normal-case text-xl" href="/">Lego Collection</a>
+        </div>
+
+        <!-- Responsive Menu for Small Screens (visible only on small screens) -->
+        <div class="dropdown sm:block md:hidden"> <!-- Visible only on small screens -->
+            <label tabindex="0" class="btn btn-ghost sm:hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
+                </svg>
+            </label>
+            <ul tabindex="0" class="menu menu-sm dropdown-content right-0 mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                <li><a href="/about" class="active">About</a></li>
+                <li>
+                    <details>
+                        <summary>Theme</summary>
+                        <ul class="p-2 bg-base-100">
+                            <li><a href="/lego/sets?theme=Books">Books</a></li>
+                            <li><a href="/lego/sets?theme=Supplemental">Supplemental</a></li>
+                            <li><a href="/lego/sets?theme=Technic">Technic</a></li>
+                        </ul>
+                    </details>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Links and Parent Dropdown for Large Screens (visible only on large screens) -->
+        <div class="navbar-center hidden md:flex"> <!-- Hidden on small screens, flex on medium and above -->
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="/about" class="active">About</a></li>
+                <li>
+                    <details>
+                        <summary>Theme</summary>
+                        <ul class="p-2 bg-base-100">
+                            <li><a href="/lego/sets?theme=Books">Books</a></li>
+                            <li><a href="/lego/sets?theme=Supplemental">Supplemental</a></li>
+                            <li><a href="/lego/sets?theme=Technic">Technic</a></li>
+                        </ul>
+                    </details>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto mt-8">
+        <div class="hero bg-base-200 min-h-[50vh]"> <!-- Hero section -->
+            <div class="hero-content text-center">
+                <div class="max-w-md">
+                    <h1 class="text-5xl font-bold">About</h1>
+                    <p class="py-6">All about me.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Responsive Grid System -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <!-- Left Column: Image -->
+            <div class="flex justify-center items-center">
+                <img src="/images/elephant.png" alt="Profile Image" class="rounded-lg shadow-lg w-full max-w-xs"> <!-- Replace with your image -->
+            </div>
+
+           <!-- Right Column: About Me Blurb -->
+<div class="flex flex-col justify-center">
+    <h2 class="text-xl font-semibold">Hello!</h2>
+    <p class="mt-2">I am from the Philippines and currently taking a course in Computer Programming.</p>
+
+    <h2 class="text-xl font-semibold">Here are my hobbies!</h2>
+    <p class="mt-2">In my spare time, I enjoy watching:</p>
+    <ul class="list-disc ml-5"> <!-- Added list-disc class and indentation -->
+        <li>Korean dramas</li>
+        <li>Chinese dramas</li>
+        <li>Thai dramas</li>
+    </ul>
+
+    <h2 class="text-xl font-semibold">I also love watching on YouTube:</h2>
+    <ul class="list-disc ml-5"> <!-- Added list-disc class and indentation -->
+        <li>Programming Tutorials</li>
+        <li>Foreign Language Lessons</li>
+        <li>GOSPEL sermons</li>
+        <li>Singing/Variety shows like AGT, XFACTOR, etc.</li>
+    </ul>
+
+    <h2 class="text-xl font-semibold">I also enjoy listening to Christian/GOSPEL music, and some of my favorite artists are:</h2>
+    <ul > <!-- Added list-disc class and indentation -->
+        <li type="list-disc">Hillsong</li>
+        <li>Planetshakers</li>
+        <li>Bethel</li>
+    </ul>
+</div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

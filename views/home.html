@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lego Collection</title>
+    <link rel="stylesheet" href="/css/main.css"> <!-- Compiled Tailwind CSS -->
+     
+</head>
+
+<body>
+    <div class="navbar bg-base-100">
+        <div class="flex-1">
+          <a class="btn btn-ghost normal-case text-xl" href="/">Lego Collection</a>
+        </div>
+      
+<!-- Responsive Menu for Small Screens (visible only on small screens) -->
+<div class="dropdown sm:block md:hidden"> <!-- Visible only on small screens -->
+    <label tabindex="0" class="btn btn-ghost sm:hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
+        </svg>
+    </label>
+    <ul tabindex="0" class="menu menu-sm dropdown-content right-0 mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+        <li><a href="/about">About</a></li>
+        <li>
+            <details>
+                <summary>Theme</summary>
+                <ul class="p-2 bg-base-100">
+                    <li><a href="/lego/sets?theme=Books">Books</a></li>
+                    <li><a href="/lego/sets?theme=Supplemental">Supplemental</a></li>
+                    <li><a href="/lego/sets?theme=Technic">Technic</a></li>
+                </ul>
+            </details>
+        </li>
+    </ul>
+</div>
+
+<!-- Links and Parent Dropdown for Large Screens (visible only on large screens) -->
+<div class="navbar-center hidden md:flex"> <!-- Hidden on small screens, flex on medium and above -->
+    <ul class="menu menu-horizontal px-1">
+            <li><a href="/about">About</a></li>
+            <li>
+                <details>
+                    <summary>Theme</summary>
+                    <ul class="p-2 bg-base-100">
+                        <li><a href="/lego/sets?theme=Books">Books</a></li>
+                        <li><a href="/lego/sets?theme=Supplemental">Supplemental</a></li>
+                        <li><a href="/lego/sets?theme=Technic">Technic</a></li>
+                    </ul>
+                </details>
+            </li>
+        </ul>
+</div>
+
+         </div>
+      
+    <!-- Main Content -->
+<div class="container mx-auto mt-8">
+    <div class="hero bg-base-200 min-h-[50vh]"> <!-- Changed from min-h-screen to min-h-[50vh] -->
+        <div class="hero-content text-center">
+            <div class="max-w-md">
+                <h1 class="text-5xl font-bold">Discover the Perfect LEGO Set</h1>
+                <p class="py-6">
+                    "Explore our LEGO collection and find the perfect set for you! Whether it's iconic builds or the latest releases, there's a set for every LEGO enthusiast."
+                </p>
+                <a href="/lego/sets" class="btn  btn-primary">Explore Now</a>            </div>
+        </div>
+    </div>
+ 
+        <!-- Responsive Grid of Lego Sets -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 ml-10">
+            <!-- Card 1 -->
+            <div class="card bg-white shadow-lg rounded-lg p-4">
+                <img src="https://cdn.rebrickable.com/media/sets/001-1.jpg" alt="Gears" class="w-full h-48 object-cover rounded-t-lg">
+                <h2 class="text-lg font-bold mt-2">Gears</h2>
+                <p class="text-gray-600">This set was released in America (USA/CAN) by Samsonite in 1965.</p>
+                <a href="/lego/sets/001-1" class="btn btn-primary mt-4">View Set</a>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="card bg-white shadow-lg rounded-lg p-4">
+                <img src="https://cdn.rebrickable.com/media/sets/002-1.jpg" alt="Town Mini-Figures" class="w-full h-48 object-cover rounded-t-lg">
+                <h2 class="text-lg font-bold mt-2">4.5V Samsonite Gears Motor Set</h2>
+                <p class="text-gray-600">This set was released in America (USA/CAN) by Samsonite in 1965. It was never released in Europe.</p>
+                <a href="/lego/sets/002-1" class="btn btn-primary mt-4">View Set</a>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="card bg-white shadow-lg rounded-lg p-4">
+                <img src="https://cdn.rebrickable.com/media/sets/002253963-1.jpg" alt="Castle 2 for 1 Bonus Offer" class="w-full h-48 object-cover rounded-t-lg">
+                <h2 class="text-lg font-bold mt-2">Legend of Chima: Corbeaux et Gorilles</h2>
+                <p class="text-gray-600">Title translates as: Ravens and Gorillas.<br> French: Corbeaux et Gorilles Polish: Kruki i Goryle</p>
+                <a href="/lego/sets/002253963-1" class="btn btn-primary mt-4">View Set</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
