@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+    <link rel="stylesheet" href="/css/main.css"> <!-- Compiled Tailwind CSS -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("https://quotable.io/random")
+                .then(response => response.json())
+                .then(data => {
+                    const quoteElement = document.getElementById("quote");
+                    quoteElement.innerHTML = `<p>"${data.content}"</p><p>- ${data.author}</p>`;
+                })
+                .catch(error => console.error('Error fetching quote:', error));
+        });
+    </script>
+</head>
+
+<body>
+    <%- include('partials/navbar', {page: ''}) %>
+    <!-- Main Content -->
+    <div class="container mx-auto mt-8">
+        <div class="hero bg-base-200 min-h-[50vh]"> <!-- Hero section -->
+            <div class="hero-content text-center">
+                <div class="max-w-md">
+                    <h1 class="text-5xl font-bold"><%= set.name %></h1>
+                    <p class="py-6">Below, you will find detailed information about the set: <%= set.name %>.</p>
+                </div>
+            </div>
+        </div>
+
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <!-- Left Column: Image -->
+        <div class="flex justify-center items-center">
+            <img src="<%= set.img_url %>" alt="<%= set.name %> Image" class="set-image">
+        </div>
+
+       <!-- Right Column: About Me Blurb -->
+<div class="flex flex-col justify-center">
+    <div class="set-details">
+        <h2 class="text-3xl">Details</h2>
+        <p><strong>Year Released:</strong> <%= set.year %></p>
+        <p><strong>Theme:</strong> <%= set.theme %></p>
+        <p><strong>Number of Parts:</strong> <%= set.num_parts %></p>
+        
+        <div id="quote" class="quote"></div>
+
+        <a href="#" onclick="history.back(); return false;" class="btn btn-primary">Back</a>
+    </div>
+
+</div>
+
+    </div>
+</div>
+
+</body>
+
+</html>

@@ -11,34 +11,18 @@
     </svg>
 </label>
 <ul tabindex="0" class="menu menu-sm dropdown-content right-0 mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-    <li><a href="/about">About</a></li>
-    <li>
-        <details>
-            <summary>Theme</summary>
-            <ul class="p-2 bg-base-100">
-                <li><a href="/lego/sets?theme=Books">Books</a></li>
-                <li><a href="/lego/sets?theme=Supplemental">Supplemental</a></li>
-                <li><a href="/lego/sets?theme=Technic">Technic</a></li>
-            </ul>
-        </details>
-    </li>
+    <li><a class="<%= (page == "/lego/sets") ? 'active' : '' %>" href="/lego/sets">View Collections</a>  </li>
+    <li><a class="<%= (page == "/about") ? 'active' : '' %>" href="/about">About</a></li>
+    
 </ul>
 </div>
 
 <!-- Links and Parent Dropdown for Large Screens (visible only on large screens) -->
 <div class="navbar-center hidden md:flex"> <!-- Hidden on small screens, flex on medium and above -->
 <ul class="menu menu-horizontal px-1">
-        <li><a href="/about">About</a></li>
-        <li>
-            <details>
-                <summary>Theme</summary>
-                <ul class="p-2 bg-base-100">
-                    <li><a href="/lego/sets?theme=Books">Books</a></li>
-                    <li><a href="/lego/sets?theme=Supplemental">Supplemental</a></li>
-                    <li><a href="/lego/sets?theme=Technic">Technic</a></li>
-                </ul>
-            </details>
-        </li>
+    <li> <a class="<%= (page == "/lego/sets") ? 'active' : '' %>" href="/lego/sets">View Collections</a> </li>
+     <li><a class="<%= (page == "/about") ? 'active' : '' %>" href="/about">About</a></li>
+        
     </ul>
 </div>
 
