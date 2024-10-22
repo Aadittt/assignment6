@@ -19,6 +19,10 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 8080; // assign a port
+
+// Set view engine to ejs
+app.set('view engine', 'ejs');
+
 // Enable pretty print for JSON responses
 app.set('json spaces', 2); 
 // Route: GET "/"
@@ -36,21 +40,14 @@ const Sequelize = require('sequelize');
 //app.use(express.static('public')); 
 // Serve the HTML file from the 'views' directory
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'home.html'));
+    res.render("home");
 });
 
 
 // Route: GET "/about"
 app.get('/about', (req, res) => {
-    // Construct the absolute path to "about.html"
-    const aboutFilePath = path.join(__dirname, 'views', 'about.html');
-    
-    // Send the "about.html" file
-    res.sendFile(aboutFilePath, (err) => {
-        if (err) {
-            res.status(500).send('Error loading about page');
-        }
-    });
+    // Render the "about.ejs" file located in the "views" folder
+    res.render('about', { title: 'About Us', description: 'This is the about page' });
 });
 
 // Route: GET "/lego/sets"
@@ -95,13 +92,7 @@ app.get('/lego/sets/:setNum', (req, res) => {
 // Custom 404 Error Handler
 app.use((req, res, next) => {
     res.status(404); // Set the response status to 404
-    const errorFilePath = path.join(__dirname, 'views', '404.html'); // Construct the path to the 404.html file
-    res.sendFile(errorFilePath, (err) => {
-        if (err) {
-            console.error('Error sending 404 page:', err);
-            res.status(500).send('Internal Server Error'); // Handle any errors in sending the file
-        }
-    });
+    res.render('404', { title: '404 - Page Not Found', message: 'Sorry, the page you are looking for does not exist.' });
 });
 
 
