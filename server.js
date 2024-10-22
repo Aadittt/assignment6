@@ -25,10 +25,10 @@ app.set('view engine', 'ejs');
 
 // Enable pretty print for JSON responses
 app.set('json spaces', 2); 
-app.set('views', __dirname + '/views');
-app.use(express.static(__dirname + '/public'));
-require('pg');
-const Sequelize = require('sequelize');
+//app.set('views', __dirname + '/views');
+//app.use(express.static(__dirname + '/public'));
+//require('pg');
+//const Sequelize = require('sequelize');
 
  
 app.get('/', (req, res) => {
