@@ -6,9 +6,9 @@
 * 
 *  https://www.senecacollege.ca/about/policies/academic-integrity-policy.html
 * 
-*  Name: Aaron Kerubin Racelis  Student ID: 120388236 Date: October 22,2024
+*  Name: Aaron Kerubin Racelis  Student ID: 120388236 Date: October 25,2024
 *
-*  Published URL: 
+*  Published URL: https://web322-sigma.vercel.app/
 *
 ********************************************************************************/
 
