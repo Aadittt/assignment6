@@ -1,94 +1,172 @@
-// legoSets.js
+require('dotenv').config();  // Load environment variables from .env
 
-// Import the required data
-const setData = require("../data/setData");
-const themeData = require("../data/themeData");
+const { Sequelize, Op } = require('sequelize');  // Import Sequelize and Op for operations
 
-// Initialize the sets array
-let sets = [];
-
-// Function to initialize the sets array with theme names
-function initialize() {
-    return new Promise((resolve, reject) => {
-        try {
-            sets = []; // Clear the array in case it was filled before
-
-            setData.forEach(set => {
-                // Find the corresponding theme name for the set's theme_id
-                const theme = themeData.find(t => t.id === set.theme_id);
-                // Create a new set object with the theme property
-                const setWithTheme = {
-                    ...set, // Spread the original set data
-                    theme: theme ? theme.name : "Unknown" // Add the theme name or "Unknown" if not found
-                };
-                // Add the new object to the sets array
-                sets.push(setWithTheme);
-            });
-
-            resolve(); // Resolve the promise without any data (operation complete)
-        } catch (error) {
-            reject(`Error during initialization: ${error.message}`); // Reject if any error occurs
-        }
-    });
-}
-
-// Function to return all sets
-function getAllSets() {
-    return new Promise((resolve, reject) => {
-        try {
-            resolve(sets); // Resolve with the complete sets array
-        } catch (error) {
-            reject(`Error fetching all sets: ${error.message}`); // Reject in case of an error
-        }
-    });
-}
-
-// Function to get a set by its set number
-function getSetByNum(setNum) {
-    return new Promise((resolve, reject) => {
-        try {
-            const foundSet = sets.find(set => set.set_num === setNum);
-
-            if (foundSet) {
-                resolve(foundSet); // Resolve with the found set
-            } else {
-                reject(`Set with number ${setNum} not found`); // Reject if no set is found
-            }
-        } catch (error) {
-            reject(`Error fetching set by number: ${error.message}`); // Reject in case of an error
-        }
-    });
-}
-
-// Function to get sets by theme (case-insensitive partial match)
-async function getSetsByTheme(theme) {
-    try {
-        const matchedSets = sets.filter(set => 
-            set.theme.toLowerCase().includes(theme.toLowerCase())
-        );
-
-        if (matchedSets.length > 0) {
-            return matchedSets;  // Return the filtered sets
-        } else {
-            throw new Error(`No sets found with theme "${theme}"`);  // Throw an error if no sets found
-        }
-    } catch (error) {
-        throw new Error(`Error fetching sets by theme: ${error.message}`);
+// Create Sequelize instance using values from .env file
+const sequelize = new Sequelize(
+  process.env.DB_DATABASE,  // Database name
+  process.env.DB_USER,      // Database user
+  process.env.DB_PASSWORD,  // Database password
+  {
+    host: process.env.DB_HOST,  // Database host
+    dialect: 'postgres',       // PostgreSQL dialect
+    logging: false,            // Disable SQL query logging
+    define: {
+      timestamps: false        // Disable createdAt and updatedAt columns
+    },
+    dialectOptions: {
+      ssl: {
+        require: true,               // Enforce SSL connection
+        rejectUnauthorized: false,   // Allow self-signed certificates
+        sslmode: 'require'           // Explicitly require SSL mode
+      }
     }
-}
+  }
+);
 
-// Export the functions as a module
-module.exports = { initialize, getAllSets, getSetByNum, getSetsByTheme };
+// Define the Theme model
+const Theme = sequelize.define('Theme', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true  // Automatically increment the ID for each new theme
+  },
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false
+  }
+});
 
-initialize().then(() => {
-    // Test getAllSets()
-    getAllSets().then(sets => console.log("All Sets:", sets));
+// Define the Set model
+const Set = sequelize.define('Set', {
+  set_num: {
+    type: Sequelize.STRING,
+    primaryKey: true
+  },
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  year: {
+    type: Sequelize.INTEGER
+  },
+  num_parts: {
+    type: Sequelize.INTEGER
+  },
+  theme_id: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: Theme,
+      key: 'id'
+    }
+  },
+  img_url: {
+    type: Sequelize.STRING
+  }
+});
 
-    // Test getSetByNum()
-    getSetByNum("001-1").then(set => console.log("Set with number 001-1:", set))
-        .catch(error => console.error(error));
+// Define the association between Set and Theme (One-to-Many relationship)
+Set.belongsTo(Theme, { foreignKey: 'theme_id' });
 
-    // Test getSetsByTheme()
-    getSetsByTheme("tech").then(sets => console.log("Sets with theme 'tech':", sets))
-        .catch(error => console.error(error));
-}).catch(error => console.error(error));
+// Function to initialize the database connection
+const initialize = async () => {
+  try {
+    await sequelize.sync();  // Sync Sequelize models with the database
+    console.log('Database synchronized successfully.');
+  } catch (err) {
+    console.error('Error syncing models:', err);
+    throw err;
+  }
+};
+
+// Function to fetch all sets (with optional pagination)
+const getAllSets = async (limit = 10, offset = 0) => {
+  try {
+    const sets = await Set.findAll({
+      include: [Theme],  // Include the associated Theme model
+      limit,             // Limit the number of results
+      offset,            // Skip the first `offset` results
+    });
+    return sets;
+  } catch (err) {
+    console.error('Error retrieving sets:', err);
+    throw new Error('Unable to retrieve sets');
+  }
+};
+
+// Function to fetch a set by its set_num
+const getSetByNum = async (setNum) => {
+  try {
+    const set = await Set.findOne({
+      where: { set_num: setNum },
+      include: [Theme],  // Include Theme data
+    });
+    if (!set) {
+      throw new Error('Unable to find requested set');
+    }
+    return set;
+  } catch (err) {
+    console.error('Error retrieving set by num:', err);
+    throw new Error('Unable to find requested set');
+  }
+};
+
+// Function to fetch sets by theme (case-insensitive search)
+const getSetsByTheme = async (theme) => {
+  try {
+    const sets = await Set.findAll({
+      include: [Theme],
+      where: {
+        '$Theme.name$': {   // Search for sets with a theme name that matches the theme parameter
+          [Op.iLike]: `%${theme}%`
+        }
+      }
+    });
+    return sets.length > 0 ? sets : []; // Return an empty array if no sets are found
+  } catch (err) {
+    console.error('Error retrieving sets by theme:', err);
+    throw new Error('Unable to find requested sets');
+  }
+};
+
+// Function to create a new Lego set
+const createSet = async ({ name, year, num_parts, img_url, theme_id, set_num }) => {
+  try {
+    const newSet = await Set.create({
+      name,
+      year,
+      num_parts,
+      img_url,
+      theme_id,
+      set_num
+    });
+    return newSet;
+  } catch (err) {
+    console.error('Error creating new set:', err);
+    throw new Error('Unable to create new set');
+  }
+};
+
+// Function to get all themes (to use in add set form)
+const getAllThemes = async () => {
+  try {
+    const themes = await Theme.findAll();
+    return themes;
+  } catch (err) {
+    console.error('Error retrieving themes:', err);
+    throw new Error('Unable to retrieve themes');
+  }
+};
+
+// Export functions and models
+module.exports = {
+  initialize,
+  getAllSets,
+  getSetByNum,
+  getSetsByTheme,
+  createSet,
+  getAllThemes,
+  sequelize, 
+  Set, 
+  Theme
+};

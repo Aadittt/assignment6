@@ -1,108 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lego Collection</title>
-    <link rel="stylesheet" href="/css/main.css"> <!-- Compiled Tailwind CSS -->
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-        }
-        .button {
-            padding: 5px 10px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-        .button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lego Collection</title>
+  <link rel="stylesheet" href="/css/main.css"> <!-- Ensure your styles are loaded correctly -->
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+    .button {
+      padding: 5px 10px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+    .button:hover {
+      background-color: #0056b3;
+    }
+    .active {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
-
 <body>
-    <%- include('partials/navbar',  {page:"/lego/sets"}) %>
-    <!-- Main Content -->
-    <div class="container mx-auto mt-8">
-        <div class="hero bg-base-200 min-h-[50vh]"> <!-- Hero component for 404 message -->
-            <div class="hero-content text-center">
-                <div class="max-w-md">
-                    <h1 class="text-5xl font-bold">Collection</h1>
-                    <p class="py-6">Browse the entire collection. Click the theme to filter by themes such as:
-                        <a class="btn btn-primary <%= (page == '/lego/sets') ? 'active' : '' %>" href="/lego/sets?theme=technic">Technic</a>
-<a class="btn btn-primary <%= (page == '/lego/sets') ? 'active' : '' %>" href="/lego/sets?theme=Books">Books</a>
-<a class="btn btn-primary <%= (page == '/lego/sets') ? 'active' : '' %>" href="/lego/sets?theme=Supplemental">Supplemental</a>
-</p>
-                    
-            
-                </div>
-            </div>
-        </div>
-    
-     
-<br>
-    <table>
-        <thead>
-            <tr>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Theme</th>
-                <th>Year</th>
-                <th>Number of Parts</th>
-                <th>Details</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% sets.forEach(set => { %>
-                <tr>
-                    <!-- Image Avatar -->
-                    <td><img src="<%= set.img_url %>" alt="<%= set.name %>"></td>
-                    
-                    <!-- Name -->
-                    <td><%= set.name %></td>
-                    
-                    <!-- Theme with link -->
-                    <td>
-                        <a class="button" href="/lego/sets?theme=<%= set.theme %>">
-                            <%= set.theme %>
-                        </a>
-                    </td>
-                    
-                    <!-- Year -->
-                    <td><%= set.year %></td>
-                    
-                    <!-- Number of Parts -->
-                    <td><%= set.num_parts %></td>
-                    
-                    <!-- Details Link -->
-                    <td>
-                        <a class="button" href="/lego/sets/<%= set.set_num %>">
-                            Details
-                        </a>
-                    </td>
-                </tr>
-            <% }) %>
-        </tbody>
-    </table>
-</div>
-</body>
+  <%- include('partials/navbar', { page: '/lego/sets' }) %> <!-- Include navbar, active page will be highlighted -->
 
+  <!-- Main Content -->
+  <div class="container mx-auto mt-8">
+    <h1 class="text-5xl font-bold">Collection</h1>
+    <p class="py-6">Browse the entire collection. Click the theme to filter by themes such as:
+        <a class="btn btn-primary <%= (theme == 'technic') ? 'active' : '' %>" href="/lego/sets?theme=technic">Technic</a>
+        <a class="btn btn-primary <%= (theme == 'Books') ? 'active' : '' %>" href="/lego/sets?theme=Books">Books</a>
+        <a class="btn btn-primary <%= (theme == 'Supplemental') ? 'active' : '' %>" href="/lego/sets?theme=Supplemental">Supplemental</a>
+    </p>
+
+    <!-- Table to display sets -->
+    <table>
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Theme</th>
+          <th>Year</th>
+          <th>Number of Parts</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% sets.forEach(set => { %>
+          <tr>
+            <td><img src="<%= set.img_url %>" alt="<%= set.name %> Image"></td>
+            <td><%= set.name %></td>
+            <td><a class="button" href="/lego/sets?theme=<%= set.Theme.name %>"><%= set.Theme.name %></a></td>
+            <td><%= set.year %></td>
+            <td><%= set.num_parts %></td>
+            <td><a class="button" href="/lego/sets/<%= set.set_num %>">Details</a></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+</body>
 </html>

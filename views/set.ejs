@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About</title>
+    <title><%= set.name %> - LEGO Set Details</title>
     <link rel="stylesheet" href="/css/main.css"> <!-- Compiled Tailwind CSS -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -20,7 +20,8 @@
 </head>
 
 <body>
-    <%- include('partials/navbar', {page: ''}) %>
+    <%- include('partials/navbar', {page: '/lego/sets'}) %> <!-- Adjusted for correct page link -->
+    
     <!-- Main Content -->
     <div class="container mx-auto mt-8">
         <div class="hero bg-base-200 min-h-[50vh]"> <!-- Hero section -->
@@ -32,30 +33,28 @@
             </div>
         </div>
 
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        <!-- Left Column: Image -->
-        <div class="flex justify-center items-center">
-            <img src="<%= set.img_url %>" alt="<%= set.name %> Image" class="set-image">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <!-- Left Column: Image -->
+            <div class="flex justify-center items-center">
+                <img src="<%= set.img_url %>" alt="<%= set.name %> Image" class="set-image">
+            </div>
+
+            <!-- Right Column: Set Details -->
+            <div class="flex flex-col justify-center">
+                <div class="set-details">
+                    <h2 class="text-3xl">Details</h2>
+                    <p><strong>Year Released:</strong> <%= set.year %></p>
+                    <p><strong>Theme:</strong> <%= set.Theme.name %></p> <!-- Corrected to access the theme name -->
+                    <p><strong>Number of Parts:</strong> <%= set.num_parts %></p>
+                    
+                    <div id="quote" class="quote"></div>
+
+                    <!-- Button to go back to the previous page -->
+                    <a href="#" onclick="history.back(); return false;" class="btn btn-primary">Back</a>
+                </div>
+            </div>
         </div>
-
-       <!-- Right Column: About Me Blurb -->
-<div class="flex flex-col justify-center">
-    <div class="set-details">
-        <h2 class="text-3xl">Details</h2>
-        <p><strong>Year Released:</strong> <%= set.year %></p>
-        <p><strong>Theme:</strong> <%= set.theme %></p>
-        <p><strong>Number of Parts:</strong> <%= set.num_parts %></p>
-        
-        <div id="quote" class="quote"></div>
-
-        <a href="#" onclick="history.back(); return false;" class="btn btn-primary">Back</a>
     </div>
-
-</div>
-
-    </div>
-</div>
 
 </body>
 

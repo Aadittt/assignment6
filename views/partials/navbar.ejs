@@ -11,8 +11,10 @@
     </svg>
 </label>
 <ul tabindex="0" class="menu menu-sm dropdown-content right-0 mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-    <li><a class="<%= (page == "/lego/sets") ? 'active' : '' %>" href="/lego/sets">View Collections</a>  </li>
-    <li><a class="<%= (page == "/about") ? 'active' : '' %>" href="/about">About</a></li>
+    <li><a href="/" class="<%= page === '/' ? 'active' : '' %>">Home</a></li>
+    <li><a href="/about" class="<%= page === '/about' ? 'active' : '' %>">About</a></li>
+    <li><a href="/lego/sets" class="<%= page === '/lego/sets' ? 'active' : '' %>">LEGO Sets</a></li>
+    <li><a href="/lego/addSet" class="<%= page === '/lego/addSet' ? 'active' : '' %>">Add Set</a></li>
     
 </ul>
 </div>
@@ -20,8 +22,10 @@
 <!-- Links and Parent Dropdown for Large Screens (visible only on large screens) -->
 <div class="navbar-center hidden md:flex"> <!-- Hidden on small screens, flex on medium and above -->
 <ul class="menu menu-horizontal px-1">
-    <li> <a class="<%= (page == "/lego/sets") ? 'active' : '' %>" href="/lego/sets">View Collections</a> </li>
-     <li><a class="<%= (page == "/about") ? 'active' : '' %>" href="/about">About</a></li>
+    <li><a href="/" class="<%= page === '/' ? 'active' : '' %>">Home</a></li>
+    <li><a href="/about" class="<%= page === '/about' ? 'active' : '' %>">About</a></li>
+    <li><a href="/lego/sets" class="<%= page === '/lego/sets' ? 'active' : '' %>">LEGO Sets</a></li>
+    <li><a href="/lego/addSet" class="<%= page === '/lego/addSet' ? 'active' : '' %>">Add Set</a></li>
         
     </ul>
 </div>
