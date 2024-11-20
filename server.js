@@ -2,7 +2,7 @@ const express = require('express');
 const legoData = require('./modules/legoSets');
 const path = require('path');
 const Sequelize = require('sequelize');
-
+require('pg');
 require('dotenv').config();  // Ensure your environment variables are loaded
 
 const app = express();
@@ -69,49 +69,44 @@ app.use((req, res) => {
 });
 
  
-// Import the required models (Set and Theme)
-const { Set, Theme } = require('./modules/legoSets');
-
- // Serve the add set form
+// Serve the add set form
 app.get('/lego/addSet', async (req, res) => {
-    try {
-      const themes = await legoData.getAllThemes(); // Fetch themes to display in the form
-      res.render('addSet', { themes });  // Pass the themes to the form
-    } catch (err) {
-      console.error('Error loading themes for form:', err);
-      res.status(500).render('404', { message: 'Error loading themes for the form.' });
+  try {
+   // const themes = await legoData.getAllThemes(); // Fetch themes to display in the form
+    res.render('addSet', { themes }); // Pass the themes to the form
+  } catch (err) {
+    console.error('Error loading themes for form:', err);
+    res.render('500', { message: `I'm sorry, but we have encountered the following error: ${err}` });
+  }
+});
+
+// Handle the form submission to add a new set
+app.post('/lego/addSet', async (req, res) => {
+  const { name, year, num_parts, img_url, theme_id, set_num } = req.body;
+
+  try {
+    // Validate the incoming data (optional but recommended)
+    if (!name || !year || !num_parts || !img_url || !theme_id || !set_num) {
+      return res.render('500', { message: 'All fields are required.' });
     }
-  });
-  
-  // Handle the form submission to add a new set
-  app.post('/lego/addSet', async (req, res) => {
-    const { name, year, num_parts, img_url, theme_id, set_num } = req.body;
-  
-    try {
-      // Validate the incoming data (optional but recommended)
-      if (!name || !year || !num_parts || !img_url || !theme_id || !set_num) {
-        return res.status(400).render('404', { message: 'All fields are required.' });
-      }
-  
-      // Create a new set in the database using the provided form data
-      const newSet = await Set.create({
-        name,
-        year,
-        num_parts,
-        img_url,
-        theme_id,
-        set_num
-      });
-  
-      console.log('New set added:', newSet);
-  
-      // Redirect to the new set's details page
-      res.redirect(`/lego/sets/${newSet.set_num}`);
-    } catch (err) {
-      console.error('Error adding new set:', err);
-      res.status(500).render('404', { message: 'Error adding the set to the database.' });
-    }
-  }); 
+
+    // Create a new set in the database using the provided form data
+    await legoData.addSet({
+      name,
+      year,
+      num_parts,
+      img_url,
+      theme_id,
+      set_num
+    });
+
+    // Redirect to the sets page after successful addition
+    res.redirect('/lego/sets');
+  } catch (err) {
+    console.error('Error adding new set:', err);
+    res.render('500', { message: `I'm sorry, but we have encountered the following error: ${err.message}` });
+  }
+});
 
 // Initialize Lego data and start the server
 legoData.initialize()

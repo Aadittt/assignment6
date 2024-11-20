@@ -1,5 +1,5 @@
 require('dotenv').config();  // Load environment variables from .env
-
+require('pg');
 const { Sequelize, Op } = require('sequelize');  // Import Sequelize and Op for operations
 
 // Create Sequelize instance using values from .env file
@@ -130,7 +130,7 @@ const getSetsByTheme = async (theme) => {
 };
 
 // Function to create a new Lego set
-const createSet = async ({ name, year, num_parts, img_url, theme_id, set_num }) => {
+const addSet = async ({ name, year, num_parts, img_url, theme_id, set_num }) => {
   try {
     const newSet = await Set.create({
       name,
@@ -164,7 +164,7 @@ module.exports = {
   getAllSets,
   getSetByNum,
   getSetsByTheme,
-  createSet,
+  addSet,
   getAllThemes,
   sequelize, 
   Set, 
