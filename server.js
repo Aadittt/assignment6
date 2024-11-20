@@ -63,17 +63,14 @@ app.get('/lego/sets/:setNum', async (req, res) => {
   }
 });
 
-// Handle undefined routes
-app.use((req, res) => {
-  res.status(404).render('404', { message: "The page you are looking for does not exist." });
-});
 
  
 // Serve the add set form
 app.get('/lego/addSet', async (req, res) => {
+// app.get('/lego/addSet', (req, res) => {
   try {
-   // const themes = await legoData.getAllThemes(); // Fetch themes to display in the form
-    res.render('addSet', { themes }); // Pass the themes to the form
+   const themes = await legoData.getAllThemes(); // Fetch themes to display in the form
+    res.render('addSet', { themes:themes }); // Pass the themes to the form
   } catch (err) {
     console.error('Error loading themes for form:', err);
     res.render('500', { message: `I'm sorry, but we have encountered the following error: ${err}` });
@@ -108,6 +105,46 @@ app.post('/lego/addSet', async (req, res) => {
   }
 });
 
+app.get('/lego/editSet/:set_num', async (req, res) => {
+  try {
+    const setNum = req.params.set_num;
+    const set = await legoData.getSetByNum(setNum); // Make sure you are retrieving the set correctly
+    const themes = await legoData.getAllThemes();  // Fetch themes for the select dropdown
+    res.render('editSet', { set, themes }); // Render the correct view here
+  } catch (err) {
+    console.error("Error fetching set:", err);
+    res.status(500).send("Error fetching the set details.");
+  }
+});
+
+
+// POST /lego/editSet
+app.post('/lego/editSet', (req, res) => {
+  const setNum = req.body.set_num;  // Retrieve set number from the form
+  const setData = req.body;  // Get the updated set data from the form
+
+  // Use the editSet function to update the set
+  legoData.editSet(setNum, setData)
+      .then(() => {
+          res.redirect('/lego/sets');  // Redirect to the sets list page upon success
+      })
+      .catch((err) => {
+          // Render the 500 error page if something goes wrong
+          res.render('500', { message: `I'm sorry, but we have encountered the following error: ${err.message}` });
+      });
+});
+
+app.get('/lego/deleteSet/:set_num', async (req, res) => {
+  try {
+    const setNum = req.params.set_num;  // Get the set_num from the URL parameter
+    await legoData.deleteSet(setNum);  // Call the deleteSet function
+    res.redirect('/lego/sets');  // Redirect the user to the sets page after successful deletion
+  } catch (err) {
+    console.error('Error deleting set:', err);
+    res.render('500', { message: `I'm sorry, but we have encountered the following error: ${err.message}` });  // Render the 500 page with the error message
+  }
+});
+
 // Initialize Lego data and start the server
 legoData.initialize()
   .then(() => {
@@ -119,3 +156,7 @@ legoData.initialize()
   .catch(error => {
     console.error('Error initializing Lego data:', error);
   });
+// Handle undefined routes
+app.use((req, res) => {
+  res.status(404).render('404', { message: "The page you are looking for does not exist." });
+});

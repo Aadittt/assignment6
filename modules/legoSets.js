@@ -80,7 +80,7 @@ const initialize = async () => {
 };
 
 // Function to fetch all sets (with optional pagination)
-const getAllSets = async (limit = 10, offset = 0) => {
+const getAllSets = async (limit = 100, offset = 0) => {
   try {
     const sets = await Set.findAll({
       include: [Theme],  // Include the associated Theme model
@@ -158,6 +158,48 @@ const getAllThemes = async () => {
   }
 };
 
+// Function to edit an existing Lego set
+const editSet = async (set_num, setData) => {
+  try {
+    // Find the set by its set_num and update it with the provided setData
+    const updatedSet = await Set.update(setData, {
+      where: { set_num: set_num },
+      returning: true, // Return the updated set data after the update
+    });
+
+    if (updatedSet[0] === 0) { // No rows were updated (set not found)
+      throw new Error('Set not found or no changes made');
+    }
+
+    return updatedSet[1][0]; // Return the updated set data
+  } catch (err) {
+    console.error('Error updating set:', err);
+    throw new Error(err.message || 'Unable to update set');
+  }
+};
+
+// Function to delete a set by set_num
+const deleteSet = async (setNum) => {
+  try {
+    // Try to delete the set with the matching set_num
+    const result = await Set.destroy({
+      where: { set_num: setNum } // Specify the condition to match the set_num
+    });
+
+    if (result === 0) {
+      throw new Error('No set found with the given set_num');
+    }
+
+    // If the deletion was successful, resolve the promise without any data
+    return;
+  } catch (err) {
+    // Reject the promise if an error occurred
+    console.error('Error deleting set:', err);
+    throw new Error(err.message || 'Unable to delete set');
+  }
+};
+
+
 // Export functions and models
 module.exports = {
   initialize,
@@ -166,6 +208,8 @@ module.exports = {
   getSetsByTheme,
   addSet,
   getAllThemes,
+  editSet,  
+  deleteSet,
   sequelize, 
   Set, 
   Theme

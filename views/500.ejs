@@ -7,8 +7,19 @@
   
 </head>
 <body>
-    <h1>500 - Internal Server Error</h1>
-    <p><%= message %></p>
-    <a href="/">Return to Home</a>
+     
+    <%- include('partials/navbar', {page: ''}) %>
+    <!-- Main Content -->
+    <div class="container mx-auto mt-8">
+        <div class="hero bg-base-200 min-h-[50vh]"> <!-- Hero component for 404 message -->
+            <div class="hero-content text-center">
+                <div class="max-w-md">
+                    <h1 class="text-5xl font-bold"> 500 - Internal Server Error</h1>
+                    <p><%= message %></p> 
+                     <a href="/" class="btn btn-primary mt-6">Go Back Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

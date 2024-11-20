@@ -1,35 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Add Set</title>
-</head>
-<body>
-    <h1>Add a New LEGO Set</h1>
-    <form action="/lego/addSet" method="POST">
-        <label for="name">Set Name:</label>
-        <input type="text" name="name" required>
-        <br>
-        <label for="year">Year:</label>
-        <input type="number" name="year" required>
-        <br>
-        <label for="num_parts">Number of Parts:</label>
-        <input type="number" name="num_parts" required>
-        <br>
-        <label for="img_url">Image URL:</label>
-        <input type="url" name="img_url" required>
-        <br>
-        <label for="theme_id">Theme:</label>
-        <select name="theme_id" required>
-            <% themes.forEach(theme => { %>
-                <option value="<%= theme.id %>"><%= theme.name %></option>
-            <% }); %>
-        </select>
-        <br>
-        <label for="set_num">Set Number:</label>
-        <input type="text" name="set_num" required>
-        <br>
-        <button type="submit">Add Set</button>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Add Set</title>
+        <link rel="stylesheet" href="/css/main.css"> <!-- Compiled Tailwind CSS -->
+         
+    </head>
+    
+    <body>
+        <%- include('partials/navbar', {page: '/lego/addSet' }) %>
+      <!-- Main Content -->
+<div class="container mx-auto mt-8">
+    <div class="hero bg-base-200 min-h-[50vh]"> <!-- Changed from min-h-screen to min-h-[50vh] -->
+        <div class="hero-content text-center">
+            <div class="max-w-md">
+                <h1 class="text-5xl font-bold"> Add a New LEGO Set</h1>
+            
+                <p class="py-6">
+                    "Explore our LEGO collection and find the perfect set for you! Whether it's iconic builds or the latest releases, there's a set for every LEGO enthusiast."
+                </p>
+                <a href="/lego/sets" class="btn  btn-primary">Explore Now</a>            </div>
+        </div>
+    </div>
+ 
+    <form action="/lego/addSet" method="POST" >
+        <!-- First Column -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 gap-y-0">
+            <div class="mb-6">
+                <label for="name" class="block text-gray-700 font-medium">Name:</label>
+                <input type="text" name="name" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:border-blue-300">
+            </div>
+            <div class="mb-6">
+                <label for="year" class="block text-gray-700 font-medium">Year:</label>
+                <input type="number" name="year" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:border-blue-300">
+            </div>
+        </div>
+    
+        <!-- Second Column -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 gap-y-0">
+            <div class="mb-6">
+                <label for="num_parts" class="block text-gray-700 font-medium">Number of Parts:</label>
+                <input type="number" name="num_parts" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:border-blue-300">
+            </div>
+            <div class="mb-6">
+                <label for="img_url" class="block text-gray-700 font-medium">Image URL:</label>
+                <input type="url" name="img_url" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:border-blue-300">
+            </div>
+        </div>
+    
+        <!-- Third Column -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 gap-y-0">
+            <div class="mb-6">
+                <label for="theme_id" class="block text-gray-700 font-medium">Theme:</label>
+                <select name="theme_id" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:border-blue-300">
+                    <% themes.forEach(theme => { %>
+                        <option value="<%= theme.id %>"><%= theme.name %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <div class="mb-6">
+                <label for="set_num" class="block text-gray-700 font-medium">Set Number:</label>
+                <input type="text" name="set_num" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:border-blue-300">
+            </div>
+        </div>
+    
+        <!-- Submit Button -->
+        <div class="mt-6 col-span-3">
+            <button type="submit" class="btn btn-primary w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">Add Set</button>
+        </div>
     </form>
+    
 </body>
 </html>
