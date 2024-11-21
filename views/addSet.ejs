@@ -5,7 +5,71 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Add Set</title>
         <link rel="stylesheet" href="/css/main.css"> <!-- Compiled Tailwind CSS -->
-         
+        <style>
+            /* General styles for the form */
+            form {
+                max-width: 800px; /* Max width of the form */
+                margin: auto; /* Center the form */
+                padding: 20px; /* Add padding */
+                background-color: #f9f9f9; /* Light background color */
+                border-radius: 8px; /* Rounded corners */
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            }
+        
+            /* Label styles */
+            label {
+                display: block; /* Display labels as block */
+                margin-bottom: 5px; /* Spacing between label and input */
+                color: #333; /* Darker text for labels */
+                font-weight: 500; /* Medium weight for labels */
+            }
+        
+            /* Input styles */
+            input[type="text"],
+            input[type="number"],
+            input[type="url"],
+            select {
+                width: 100%; /* Full width inputs */
+                padding: 10px; /* Inner padding */
+                margin-top: 5px; /* Spacing above input */
+                border: 1px solid #ccc; /* Border color */
+                border-radius: 4px; /* Rounded corners for inputs */
+                transition: border-color 0.3s; /* Smooth transition for focus */
+            }
+        
+            input[type="text"]:focus,
+            input[type="number"]:focus,
+            input[type="url"]:focus,
+            select:focus {
+                border-color: #007bff; /* Highlight border on focus */
+                outline: none; /* Remove default outline */
+            }
+        
+            /* Submit button styles */
+            button {
+                background-color: #007bff; /* Primary button color */
+                color: white; /* Text color for button */
+                padding: 10px; /* Inner padding for button */
+                border: none; /* Remove border */
+                border-radius: 4px; /* Rounded corners */
+                cursor: pointer; /* Pointer cursor on hover */
+                font-size: 16px; /* Font size */
+                transition: background-color 0.3s; /* Smooth transition for hover */
+                width: 100%; /* Full width for button */
+            }
+        
+            button:hover {
+                background-color: #0056b3; /* Darker shade on hover */
+            }
+        
+            /* Responsive adjustments */
+            @media (max-width: 640px) {
+                .grid {
+                    grid-template-columns: 1fr; /* One column on small screens */
+                }
+            }
+        </style>
+        
     </head>
     
     <body>
@@ -24,52 +88,52 @@
         </div>
     </div>
  
-    <form action="/lego/addSet" method="POST" >
+    <form action="/lego/addSet" method="POST">
         <!-- First Column -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 gap-y-0">
             <div class="mb-6">
-                <label for="name" class="block text-gray-700 font-medium">Name:</label>
-                <input type="text" name="name" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:border-blue-300">
+                <label for="name">Name:</label>
+                <input type="text" name="name" required>
             </div>
             <div class="mb-6">
-                <label for="year" class="block text-gray-700 font-medium">Year:</label>
-                <input type="number" name="year" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:border-blue-300">
+                <label for="year">Year:</label>
+                <input type="number" name="year" required>
             </div>
         </div>
     
         <!-- Second Column -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 gap-y-0">
             <div class="mb-6">
-                <label for="num_parts" class="block text-gray-700 font-medium">Number of Parts:</label>
-                <input type="number" name="num_parts" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:border-blue-300">
+                <label for="num_parts">Number of Parts:</label>
+                <input type="number" name="num_parts" required>
             </div>
             <div class="mb-6">
-                <label for="img_url" class="block text-gray-700 font-medium">Image URL:</label>
-                <input type="url" name="img_url" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:border-blue-300">
+                <label for="img_url">Image URL:</label>
+                <input type="url" name="img_url" required>
             </div>
         </div>
     
         <!-- Third Column -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 gap-y-0">
             <div class="mb-6">
-                <label for="theme_id" class="block text-gray-700 font-medium">Theme:</label>
-                <select name="theme_id" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:border-blue-300">
+                <label for="theme_id">Theme:</label>
+                <select name="theme_id" required>
                     <% themes.forEach(theme => { %>
                         <option value="<%= theme.id %>"><%= theme.name %></option>
                     <% }); %>
                 </select>
             </div>
             <div class="mb-6">
-                <label for="set_num" class="block text-gray-700 font-medium">Set Number:</label>
-                <input type="text" name="set_num" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:border-blue-300">
+                <label for="set_num">Set Number:</label>
+                <input type="text" name="set_num" required>
             </div>
         </div>
     
         <!-- Submit Button -->
         <div class="mt-6 col-span-3">
-            <button type="submit" class="btn btn-primary w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">Add Set</button>
+            <button type="submit">Add Set</button>
         </div>
     </form>
-    
+        
 </body>
 </html>
