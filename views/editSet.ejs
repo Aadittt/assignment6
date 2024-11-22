@@ -15,72 +15,75 @@
 
     <!-- Main Content -->
     <div class="container mx-auto mt-8">
-        <!-- Hero Section -->
-        <div class="hero bg-base-200 min-h-[50vh]">
-            <div class="hero-content text-center">
-                <div class="max-w-md">
-                    <h1 class="text-5xl font-bold">Edit LEGO Set: <%= set.name %></h1>
-                    <p class="py-6">Below, you can edit the details or delete this LEGO set: <%= set.name %>.</p>
-                </div>
-            </div>
+<!-- Hero Section -->
+<div style="background-color: #e0f2fe; min-height: 50vh; display: flex; justify-content: center; align-items: center;">
+    <div style="text-align: center;">
+        <div style="max-width: 400px;">
+            <h1 style="font-size: 2.5rem; font-weight: bold;">Edit Set: <%= set.name %></h1>
+            <p style="padding: 1.5rem 0;">Use the below form to update the <%= set.name %> set.</p>
         </div>
+    </div>
+</div>
 
-        <!-- Edit Set Form -->
-        <form action="/lego/editSet" method="POST" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            
-            <!-- Set Name -->
-            <div class="mb-6">
-                <label for="name" class="block text-gray-700 font-medium">Set Name:</label>
-                <input type="text" name="name" value="<%= set.name %>" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:border-blue-300">
-            </div>
+<!-- Edit Set Form -->
+<form action="/lego/editSet" method="POST" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 1.5rem; padding: 1.5rem; background-color: #ffffff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 0.5rem;">
+    
+    <!-- Set Name -->
+    <div style="margin-bottom: 1.5rem;">
+        <label for="name" style="display: block; color: #4a4a4a; font-weight: 500;">Set Name:</label>
+        <input type="text" name="name" value="<%= set.name %>" required style="width: 100%; border: 1px solid #d1d5db; border-radius: 0.375rem; padding: 0.75rem 1rem; background-color: #f3e8ff; transition: border-color 0.2s; focus: outline: none; focus: border-color: #3b82f6; focus: background-color: #e9d5ff;">
+    </div>
 
-            <!-- Year -->
-            <div class="mb-6">
-                <label for="year" class="block text-gray-700 font-medium">Year:</label>
-                <input type="number" name="year" value="<%= set.year %>" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:border-blue-300">
-            </div>
+    <!-- Year -->
+    <div style="margin-bottom: 1.5rem;">
+        <label for="year" style="display: block; color: #4a4a4a; font-weight: 500;">Year:</label>
+        <input type="number" name="year" value="<%= set.year %>" required style="width: 100%; border: 1px solid #d1d5db; border-radius: 0.375rem; padding: 0.75rem 1rem; background-color: #f3e8ff; transition: border-color 0.2s; focus: outline: none; focus: border-color: #3b82f6; focus: background-color: #e9d5ff;">
+    </div>
 
-            <!-- Number of Parts -->
-            <div class="mb-6">
-                <label for="num_parts" class="block text-gray-700 font-medium">Number of Parts:</label>
-                <input type="number" name="num_parts" value="<%= set.num_parts %>" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:border-blue-300">
-            </div>
+    <!-- Number of Parts -->
+    <div style="margin-bottom: 1.5rem;">
+        <label for="num_parts" style="display: block; color: #4a4a4a; font-weight: 500;">Number of Parts:</label>
+        <input type="number" name="num_parts" value="<%= set.num_parts %>" required style="width: 100%; border: 1px solid #d1d5db; border-radius: 0.375rem; padding: 0.75rem 1rem; background-color: #f3e8ff; transition: border-color 0.2s; focus: outline: none; focus: border-color: #3b82f6; focus: background-color: #e9d5ff;">
+    </div>
 
-            <!-- Image URL -->
-            <div class="mb-6">
-                <label for="img_url" class="block text-gray-700 font-medium">Image URL:</label>
-                <input type="url" name="img_url" value="<%= set.img_url %>" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:border-blue-300">
-            </div>
+    <!-- Image URL -->
+    <div style="margin-bottom: 1.5rem;">
+        <label for="img_url" style="display: block; color: #4a4a4a; font-weight: 500;">Image URL:</label>
+        <input type="url" name="img_url" value="<%= set.img_url %>" required style="width: 100%; border: 1px solid #d1d5db; border-radius: 0.375rem; padding: 0.75rem 1rem; background-color: #f3e8ff; transition: border-color 0.2s; focus: outline: none; focus: border-color: #3b82f6; focus: background-color: #e9d5ff;">
+    </div>
 
-            <!-- Theme Selection -->
-            <div class="mb-6">
-                <label for="theme_id" class="block text-gray-700 font-medium">Theme:</label>
-                <select name="theme_id" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:border-blue-300">
-                    <% themes.forEach(theme => { %>
-                        <option value="<%= theme.id %>" <%= (set.theme_id == theme.id) ? "selected" : "" %>><%= theme.name %></option>
-                    <% }); %>
-                </select>
-            </div>
+    <!-- Theme Selection -->
+    <div style="margin-bottom: 1.5rem;">
+        <label for="theme_id" style="display: block; color: #4a4a4a; font-weight: 500;">Theme:</label>
+        <select name="theme_id" required style="width: 100%; border: 1px solid #d1d5db; border-radius: 0.375rem; padding: 0.75rem 1rem; background-color: #f3e8ff; transition: border-color 0.2s; focus: outline: none; focus: border-color: #3b82f6; focus: background-color: #e9d5ff;">
+            <% themes.forEach(theme => { %>
+                <option value="<%= theme.id %>" <%= (set.theme_id == theme.id) ? "selected" : "" %>><%= theme.name %></option>
+            <% }); %>
+        </select>
+    </div>
 
-            <!-- Set Number (Read-only) -->
-            <div class="mb-6">
-                <label for="set_num" class="block text-gray-700 font-medium">Set Number:</label>
-                <input type="text" name="set_num" value="<%= set.set_num %>" readonly class="w-full border border-gray-300 rounded-md px-3 py-2 focus:border-blue-300 cursor-not-allowed">
-            </div>
+    <!-- Set Number (Read-only) -->
+    <div style="margin-bottom: 1.5rem;">
+        <label for="set_num" style="display: block; color: #4a4a4a; font-weight: 500;">Set Number:</label>
+        <input type="text" name="set_num" value="<%= set.set_num %>" readonly style="width: 100%; border: 1px solid #d1d5db; border-radius: 0.375rem; padding: 0.75rem 1rem; background-color: #f3e8ff; cursor: not-allowed;">
+    </div>
 
-            <!-- Submit Button -->
-            <div class="mb-6">
-                <button type="submit" class="btn btn-success w-full py-2 text-white">Update Set</button>
-            </div>
-        </form>
- <!-- Delete Button -->
- <form action="/lego/deleteSet/<%= set.set_num %>" method="GET" class="mt-4">
-    <button type="submit" class="btn btn-error">Delete Set</button>
+    <!-- Button Row -->
+    <div style="grid-column: span 3; display: flex; justify-content: space-between; margin-bottom: 1.5rem;">
+        <!-- Submit Button -->
+        <button type="submit" style="background-color: #3b82f6; color: white; padding: 0.5rem 1.5rem; border: none; border-radius: 0.375rem; cursor: pointer; transition: background-color 0.2s;">
+            Update Set
+        </button>
+        <!-- Delete Button -->
+        
+  
 </form>
-        <!-- Back Button -->
-        <div class="mb-6">
-            <a href="/lego/sets" class="btn btn-primary w-full py-2 text-white">Back to Sets</a>
-        </div>
+<form action="/lego/deleteSet/<%= set.set_num %>" method="GET" style="margin-left: 1rem;">
+    <button type="submit" style="background-color: #f43f5e; color: white; padding: 0.5rem 1.5rem; border: none; border-radius: 0.375rem; cursor: pointer; transition: background-color 0.2s;">
+        Delete Set
+    </button>
+</form>
+</div>
     </div>
 
 </body>
