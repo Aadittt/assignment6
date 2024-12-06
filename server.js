@@ -6,171 +6,200 @@
 * 
 *  https://www.senecacollege.ca/about/policies/academic-integrity-policy.html
 * 
-*  Name: Aaron Kerubin Racelis  Student ID: 120388236 Date: November 21,2024
+*  Name: Aaron Kerubin Racelis  Student ID: 120388236 Date: November 21, 2024
 *
 *  Published URL: web322assignment5.vercel.app
 *
 ********************************************************************************/
 
+require('dotenv').config(); // Load environment variables
+const authData = require('./modules/auth-service');
 const express = require('express');
 const legoData = require('./modules/legoSets');
 const path = require('path');
-const Sequelize = require('sequelize');
-require('pg');
-require('dotenv').config();  // Ensure your environment variables are loaded
-
+const clientSessions = require('client-sessions'); // Required for session management
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-
-// Add this middleware to parse URL-encoded data (for form submissions)
+// Middleware to parse URL-encoded data (for form submissions)
 app.use(express.urlencoded({ extended: true }));
 
-// Set view engine to EJS
+// Configure the client-session middleware
+app.use(clientSessions({
+    cookieName: 'session', // Name of the cookie to store the session
+    secret: process.env.SESSION_SECRET, // Secret for encrypting the session
+    duration: 30 * 60 * 1000, // Session duration (30 minutes in milliseconds)
+    activeDuration: 5 * 60 * 1000, // After 5 minutes of inactivity, the session will be refreshed
+    httpOnly: true, // Ensures the cookie is sent only via HTTP(S), not accessible by JavaScript
+    secure: process.env.NODE_ENV === 'production' // Use secure cookies in production
+}));
+
+// Helper middleware to ensure the user is logged in
+function ensureLogin(req, res, next) {
+  if (!req.session.userName) {
+  //    return res.redirect('/login'); // Redirect to login if not logged in
+  }
+  next(); // Proceed to the next middleware or route handler if logged in
+}
+
+// Middleware to make the session object available to all templates
+app.use((req, res, next) => {
+    res.locals.session = req.session; // Make the session object available in templates
+    next();
+});
+
+
+// Set up view engine and static files
 app.set('view engine', 'ejs');
-app.set('json spaces', 2); 
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Serve the homepage
+// Routes
 app.get('/', (req, res) => {
-  res.render('home', { page: '/' });
+    res.render('home', { page: '/' });
 });
 
-// Serve the about page
 app.get('/about', (req, res) => {
-  res.render('about', { page: '/about' });
+    res.render('about', { page: '/about' });
 });
 
-// Route: GET "/lego/sets"
 app.get('/lego/sets', async (req, res) => {
-  const theme = req.query.theme;  // Get the theme from query string (if any)
-
-  try {
-    let sets;
-
-    if (theme) {
-      // If a theme is provided, get sets by theme
-      sets = await legoData.getSetsByTheme(theme);
-    } else {
-      // If no theme is provided, get all sets
-      sets = await legoData.getAllSets();
+    try {
+        const theme = req.query.theme;
+        const sets = theme
+            ? await legoData.getSetsByTheme(theme)
+            : await legoData.getAllSets();
+        res.render('sets', { sets, page: '/lego/sets', theme });
+    } catch (error) {
+        res.status(500).render('500', { message: `Error retrieving LEGO data: ${error.message}` });
     }
-
-    // Render the 'sets' view with the sets data and selected theme
-    res.render('sets', { sets, page: '/lego/sets', theme });
-  } catch (error) {
-    // Handle any errors that occur during the database query
-    res.status(500).render('404', { message: 'Error retrieving LEGO data: ' + error.message });
-  }
 });
 
-// Route: GET "/lego/sets/:setNum"
 app.get('/lego/sets/:setNum', async (req, res) => {
-  const setNum = req.params.setNum;  // Get the set number from URL parameter
-
-  try {
-    const set = await legoData.getSetByNum(setNum);  // Fetch the set by its set number
-    res.render('set', { set });  // Render the set details page
-  } catch (error) {
-    res.status(404).render('404', { message: `No set found with the number "${setNum}".` });
-  }
-});
-
-
- 
-// Serve the add set form
-app.get('/lego/addSet', async (req, res) => {
-// app.get('/lego/addSet', (req, res) => {
-  try {
-   const themes = await legoData.getAllThemes(); // Fetch themes to display in the form
-    res.render('addSet', { themes:themes }); // Pass the themes to the form
-  } catch (err) {
-    console.error('Error loading themes for form:', err);
-    res.render('500', { message: `I'm sorry, but we have encountered the following error: ${err}` });
-  }
-});
-
-// Handle the form submission to add a new set
-app.post('/lego/addSet', async (req, res) => {
-  const { name, year, num_parts, img_url, theme_id, set_num } = req.body;
-
-  try {
-    // Validate the incoming data (optional but recommended)
-    if (!name || !year || !num_parts || !img_url || !theme_id || !set_num) {
-      return res.render('500', { message: 'All fields are required.' });
+    try {
+        const set = await legoData.getSetByNum(req.params.setNum);
+        res.render('set', { set });
+    } catch (error) {
+        res.status(404).render('404', { message: `No set found with the number "${req.params.setNum}".` });
     }
+});
 
-    // Create a new set in the database using the provided form data
-    await legoData.addSet({
-      name,
-      year,
-      num_parts,
-      img_url,
-      theme_id,
-      set_num
+app.get('/lego/addSet', ensureLogin, async (req, res) => {
+    try {
+        const themes = await legoData.getAllThemes();
+        res.render('addSet', { themes });
+    } catch (err) {
+        res.render('500', { message: `Error loading themes: ${err.message}` });
+    }
+});
+
+app.post('/lego/addSet', ensureLogin, async (req, res) => {
+    try {
+        const { name, year, num_parts, img_url, theme_id, set_num } = req.body;
+        if (!name || !year || !num_parts || !img_url || !theme_id || !set_num) {
+            throw new Error('All fields are required.');
+        }
+        await legoData.addSet({ name, year, num_parts, img_url, theme_id, set_num });
+        res.redirect('/lego/sets');
+    } catch (err) {
+        res.render('500', { message: `Error adding set: ${err.message}` });
+    }
+});
+
+app.get('/lego/editSet/:set_num', ensureLogin, async (req, res) => {
+    try {
+        const set = await legoData.getSetByNum(req.params.set_num);
+        const themes = await legoData.getAllThemes();
+        res.render('editSet', { set, themes });
+    } catch (err) {
+        res.status(500).render('500', { message: `Error fetching set details: ${err.message}` });
+    }
+});
+
+app.post('/lego/editSet', ensureLogin, async (req, res) => {
+    try {
+        await legoData.editSet(req.body.set_num, req.body);
+        res.redirect('/lego/sets');
+    } catch (err) {
+        res.render('500', { message: `Error updating set: ${err.message}` });
+    }
+});
+
+app.get('/lego/deleteSet/:set_num', ensureLogin, async (req, res) => {
+    try {
+        await legoData.deleteSet(req.params.set_num);
+        res.redirect('/lego/sets');
+    } catch (err) {
+        res.render('500', { message: `Error deleting set: ${err.message}` });
+    }
+});
+
+// New Routes for User Authentication
+
+// GET /login - renders the login page
+app.get('/login', (req, res) => {
+    res.render('login', { errorMessage: '', userName: '' });
+});
+
+// GET /register - renders the register page
+app.get('/register', (req, res) => {
+    res.render('register', { errorMessage: '', successMessage: '', userName: '' });
+});
+
+// POST /register - handles user registration
+app.post('/register', (req, res) => {
+    const userData = req.body;
+    authData.registerUser(userData).then(() => {
+        // On success, pass successMessage to render view
+        res.render('register', { successMessage: 'User created. You can now log in.', userName: userData.userName });
+    }).catch((err) => {
+        // On error, pass errorMessage to render view
+        res.render('register', { errorMessage: err.message, userName: userData.userName });
     });
-
-    // Redirect to the sets page after successful addition
-    res.redirect('/lego/sets');
-  } catch (err) {
-    console.error('Error adding new set:', err);
-    res.render('500', { message: `I'm sorry, but we have encountered the following error: ${err.message}` });
-  }
 });
 
-app.get('/lego/editSet/:set_num', async (req, res) => {
-  try {
-    const setNum = req.params.set_num;
-    const set = await legoData.getSetByNum(setNum); // Make sure you are retrieving the set correctly
-    const themes = await legoData.getAllThemes();  // Fetch themes for the select dropdown
-    res.render('editSet', { set, themes }); // Render the correct view here
-  } catch (err) {
-    console.error("Error fetching set:", err);
-    res.status(500).send("Error fetching the set details.");
-  }
+// POST /login - handles user login
+app.post('/login', (req, res) => {
+    req.body.userAgent = req.get('User-Agent'); // Store User-Agent in body
+
+    authData.checkUser(req.body).then((user) => {
+        req.session.user = {
+            userName: user.userName,
+            email: user.email,
+            loginHistory: user.loginHistory
+        };
+        res.redirect('/lego/sets');
+    }).catch((err) => {
+        res.render('login', { errorMessage: err, userName: req.body.userName });
+    });
+});
+
+// GET /logout - resets the session and redirects to the home page
+app.get('/logout', (req, res) => {
+    req.session.reset(); // Reset the session
+    res.redirect('/'); // Redirect to home page
 });
 
 
-// POST /lego/editSet
-app.post('/lego/editSet', (req, res) => {
-  const setNum = req.body.set_num;  // Retrieve set number from the form
-  const setData = req.body;  // Get the updated set data from the form
 
-  // Use the editSet function to update the set
-  legoData.editSet(setNum, setData)
-      .then(() => {
-          res.redirect('/lego/sets');  // Redirect to the sets list page upon success
-      })
-      .catch((err) => {
-          // Render the 500 error page if something goes wrong
-          res.render('500', { message: `I'm sorry, but we have encountered the following error: ${err.message}` });
-      });
+// GET /userHistory - renders the userHistory page (protected by ensureLogin)
+app.get('/userHistory', ensureLogin, (req, res) => {
+    res.render('userHistory', { user: req.session.user }); // Pass session user data to the view
 });
 
-app.get('/lego/deleteSet/:set_num', async (req, res) => {
-  try {
-    const setNum = req.params.set_num;  // Get the set_num from the URL parameter
-    await legoData.deleteSet(setNum);  // Call the deleteSet function
-    res.redirect('/lego/sets');  // Redirect the user to the sets page after successful deletion
-  } catch (err) {
-    console.error('Error deleting set:', err);
-    res.render('500', { message: `I'm sorry, but we have encountered the following error: ${err.message}` });  // Render the 500 page with the error message
-  }
-});
-
-// Initialize Lego data and start the server
+// Initialize legoData and authData, then start the server
 legoData.initialize()
-  .then(() => {
-    console.log('Lego data initialized successfully');
-    app.listen(PORT, () => {
-      console.log(`Server is running on http://localhost:${PORT}`);
+    .then(authData.initialize)
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log(`Server is running on http://localhost:${PORT}`);
+        });
+    })
+    .catch(err => {
+        console.error(`Unable to start the server: ${err.message}`);
     });
-  })
-  .catch(error => {
-    console.error('Error initializing Lego data:', error);
-  });
+
 // Handle undefined routes
 app.use((req, res) => {
-  res.status(404).render('404', { message: "The page you are looking for does not exist." });
+    res.status(404).render('404', { message: "The page you are looking for does not exist." });
 });

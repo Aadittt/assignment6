@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User History</title>
+    <!-- Internal CSS -->
+    <style>
+        /* Basic Styles for User History */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .hero {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .history table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .history table th, .history table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .history table th {
+            background-color: #f8f9fa;
+        }
+
+        .logout {
+            text-align: center;
+        }
+
+        .logout a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section: User's details -->
+    <div class="hero">
+        <h1>Welcome, <%= session.user.userName %>!</h1>
+        <p>Email: <%= session.user.email %></p>
+    </div>
+
+    <!-- Login History Table -->
+    <div class="history">
+        <h2>Login History</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Login Date/Time</th>
+                    <th>Client Information</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loop through the loginHistory object -->
+                <% if (session.user.loginHistory && session.user.loginHistory.length > 0) { %>
+                    <% session.user.loginHistory.forEach(function(entry) { %>
+                        <tr>
+                            <td><%= new Date(entry.date).toLocaleString() %></td>
+                            <td><%= entry.userAgent %></td>
+                        </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="2">No login history available.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add a link to log out -->
+    <div class="logout">
+        <a href="/logout">Log out</a>
+    </div>
+</body>
+</html>

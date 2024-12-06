@@ -5,7 +5,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= set.name %> - LEGO Set Details</title>
-    <link rel="stylesheet" href="/css/main.css"> <!-- Compiled Tailwind CSS -->
+    <!-- Internal CSS -->
+    <style>
+        /* Base Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            background-color: #e5e7eb;
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            text-align: center;
+        }
+
+        .text-5xl {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .text-3xl {
+            font-size: 1.875rem;
+            font-weight: bold;
+        }
+
+        .set-image {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        .set-details {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .quote {
+            margin-top: 20px;
+            font-style: italic;
+            color: #555;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+    </style>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             fetch("https://quotable.io/random")
@@ -49,8 +123,10 @@
                     
                     <div id="quote" class="quote"></div>
 
-                    <!-- Edit Button to navigate to the Edit page -->
-                    <a href="/lego/editSet/<%= set.set_num %>" class="btn btn-success mt-4">Edit Set:<%= set.name%></a>
+                    <!-- Conditionally render the Edit button if the user is logged in -->
+                    <% if (session.user) { %>
+                        <a href="/lego/editSet/<%= set.set_num %>" class="btn btn-success mt-4">Edit Set: <%= set.name %></a>
+                    <% } %>
 
                     <!-- Button to go back to the previous page -->
                     <a href="#" onclick="history.back(); return false;" class="btn btn-primary mt-2">Return</a>
