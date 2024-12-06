@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="/css/main.css"> <!-- Compiled Tailwind CSS -->
+  
+</head>
+<body class="bg-gray-100">
+
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="card w-96 bg-white shadow-xl p-8">
+            <% if (successMessage) { %>
+                <!-- Success Alert -->
+                <div class="alert alert-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span><%= successMessage %></span>
+                </div><br />
+                <a href="/login" class="btn btn-success">Proceed to Log in</a>
+            <% } else { %>
+                <!-- Registration Form -->
+                <h2 class="text-2xl font-bold mb-6 text-center">Register</h2>
+
+                <form action="/register" method="POST">
+                    <!-- User Name Input -->
+                    <div class="mb-4">
+                        <label for="userName" class="block text-sm font-semibold">User Name</label>
+                        <input type="text" name="userName" id="userName" placeholder="User Name" class="input input-bordered w-full" required value="<%= userName ? userName : '' %>">
+                    </div>
+
+                    <!-- Password Input -->
+                    <div class="mb-4">
+                        <label for="password" class="block text-sm font-semibold">Password</label>
+                        <input type="password" name="password" id="password" placeholder="Password" class="input input-bordered w-full" required>
+                    </div>
+
+                    <!-- Confirm Password Input -->
+                    <div class="mb-4">
+                        <label for="password2" class="block text-sm font-semibold">Confirm Password</label>
+                        <input type="password" name="password2" id="password2" placeholder="Confirm Password" class="input input-bordered w-full" required>
+                    </div>
+
+                    <!-- Email Input -->
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-semibold">Email Address</label>
+                        <input type="email" name="email" id="email" placeholder="Email Address" class="input input-bordered w-full" required>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="mb-4">
+                        <button type="submit" class="btn btn-primary w-full">Register</button>
+                    </div>
+                </form>
+
+                <!-- Error Message Section -->
+                <% if (errorMessage) { %>
+                    <div class="alert alert-error mt-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span><%= errorMessage %></span>
+                    </div>
+                <% } %>
+            <% } %>
+        </div>
+    </div>
+
+</body>
+</html>
