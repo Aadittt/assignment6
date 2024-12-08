@@ -6,55 +6,46 @@
 * 
 *  https://www.senecacollege.ca/about/policies/academic-integrity-policy.html
 * 
-*  Name: Aaron Kerubin Racelis  Student ID: 120388236 Date: December 6, 2024
+*  Name: Aadit Magar  Student ID: 108518234\\ Date:12/8/2024
 *
-*  Published URL: web322-rho.vercel.app
-*
+*  Published URL: 
 ********************************************************************************/
 
-require('dotenv').config(); // Load environment variables
+require('dotenv').config();
 const authData = require('./modules/auth-service');
 const express = require('express');
 const legoData = require('./modules/legoSets');
 const path = require('path');
-const clientSessions = require('client-sessions'); // Required for session management
+const clientSessions = require('client-sessions');
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
-// Middleware to parse URL-encoded data (for form submissions)
 app.use(express.urlencoded({ extended: true }));
 
-// Configure the client-session middleware
 app.use(clientSessions({
-    cookieName: 'session', // Name of the cookie to store the session
-    secret: process.env.SESSION_SECRET, // Secret for encrypting the session
-    duration: 30 * 60 * 1000, // Session duration (30 minutes in milliseconds)
-    activeDuration: 5 * 60 * 1000, // After 5 minutes of inactivity, the session will be refreshed
-    httpOnly: true, // Ensures the cookie is sent only via HTTP(S), not accessible by JavaScript
-    secure: process.env.NODE_ENV === 'production' // Use secure cookies in production
+    cookieName: 'session',
+    secret: process.env.SESSION_SECRET,
+    duration: 30 * 60 * 1000,
+    activeDuration: 5 * 60 * 1000,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production'
 }));
 
-// Helper middleware to ensure the user is logged in
 function ensureLogin(req, res, next) {
-  if (!req.session.userName) {
-  //    return res.redirect('/login'); // Redirect to login if not logged in
-  }
-  next(); // Proceed to the next middleware or route handler if logged in
+    if (!req.session.userName) {
+    }
+    next();
 }
 
-// Middleware to make the session object available to all templates
 app.use((req, res, next) => {
-    res.locals.session = req.session; // Make the session object available in templates
+    res.locals.session = req.session;
     next();
 });
 
-
-// Set up view engine and static files
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Routes
 app.get('/', (req, res) => {
     res.render('home', { page: '/' });
 });
@@ -134,33 +125,25 @@ app.get('/lego/deleteSet/:set_num', ensureLogin, async (req, res) => {
     }
 });
 
-// New Routes for User Authentication
-
-// GET /login - renders the login page
 app.get('/login', (req, res) => {
     res.render('login', { errorMessage: '', userName: '' });
 });
 
-// GET /register - renders the register page
 app.get('/register', (req, res) => {
     res.render('register', { errorMessage: '', successMessage: '', userName: '' });
 });
 
-// POST /register - handles user registration
 app.post('/register', (req, res) => {
     const userData = req.body;
     authData.registerUser(userData).then(() => {
-        // On success, pass successMessage to render view
         res.render('register', { successMessage: 'User created. You can now log in.', userName: userData.userName });
     }).catch((err) => {
-        // On error, pass errorMessage to render view
         res.render('register', { errorMessage: err.message, userName: userData.userName });
     });
 });
 
-// POST /login - handles user login
 app.post('/login', (req, res) => {
-    req.body.userAgent = req.get('User-Agent'); // Store User-Agent in body
+    req.body.userAgent = req.get('User-Agent');
 
     authData.checkUser(req.body).then((user) => {
         req.session.user = {
@@ -174,20 +157,15 @@ app.post('/login', (req, res) => {
     });
 });
 
-// GET /logout - resets the session and redirects to the home page
 app.get('/logout', (req, res) => {
-    req.session.reset(); // Reset the session
-    res.redirect('/'); // Redirect to home page
+    req.session.reset();
+    res.redirect('/');
 });
 
-
-
-// GET /userHistory - renders the userHistory page (protected by ensureLogin)
 app.get('/userHistory', ensureLogin, (req, res) => {
-    res.render('userHistory', { user: req.session.user }); // Pass session user data to the view
+    res.render('userHistory', { user: req.session.user });
 });
 
-// Initialize legoData and authData, then start the server
 legoData.initialize()
     .then(authData.initialize)
     .then(() => {
@@ -199,7 +177,6 @@ legoData.initialize()
         console.error(`Unable to start the server: ${err.message}`);
     });
 
-// Handle undefined routes
 app.use((req, res) => {
     res.status(404).render('404', { message: "The page you are looking for does not exist." });
 });

@@ -8,7 +8,7 @@
     "start": "node server.js",
     "tw:build": "tailwindcss build -i ./public/css/tailwind.css -o ./public/css/main.css"
   },
-  "author": "Aaron Kerubin Racelis",
+  "author": "Aadit Magar",
   "license": "ISC",
   "dependencies": {
     "@tailwindcss/typography": "^0.5.15",
